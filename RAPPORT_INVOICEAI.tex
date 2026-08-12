@@ -1,0 +1,1035 @@
+\documentclass[a4paper,12pt]{extarticle}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{caption}
+\usepackage[french]{babel}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{enumitem}
+\usepackage{geometry}
+
+% ── Correction Avertissement todonotes ────────────────────────
+\setlength{\marginparwidth}{2cm}
+\usepackage[colorinlistoftodos]{todonotes}
+
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{tocloft}
+\usepackage{setspace}
+\usepackage{mdframed}
+\usepackage{listings}
+\usepackage{float}
+\usepackage[hidelinks]{hyperref}
+\usepackage{colortbl}
+\usepackage{amssymb}
+\usepackage{tocbibind}
+
+\geometry{
+  a4paper,
+  top=2.5cm,
+  bottom=2.5cm,
+  left=3cm,
+  right=2.5cm
+}
+
+% ── Ajustement de la géométrie pour fancyhdr ──────────────────
+\setlength{\headheight}{13.6pt}
+\addtolength{\topmargin}{-1.6pt}
+
+% ── Couleurs IGA ──────────────────────────────────────────────
+\definecolor{igablue}{RGB}{26, 47, 93}
+\definecolor{igalightblue}{RGB}{52, 100, 164}
+\definecolor{igaaccent}{RGB}{210, 125, 76}
+\definecolor{lightgray}{RGB}{245, 245, 245}
+\definecolor{codegray}{RGB}{100,100,100}
+
+% ── En-tête / pied de page ────────────────────────────────────
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\small\color{igablue}Mise en place d'une application de facturation IA (InvoiceAI)}
+\rhead{\small\color{igablue}IGA}
+\cfoot{\small\thepage}
+\renewcommand{\headrulewidth}{0.5pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% ── Titres de chapitres ───────────────────────────────────────
+\titleformat{\section}[block]
+  {\Large\bfseries\color{igablue}}
+  {\thesection.}{0.5em}{}
+  [\vspace{-0.3em}\rule{\textwidth}{0.5pt}]
+
+\titleformat{\subsection}[block]
+  {\large\bfseries\color{igalightblue}}
+  {\thesubsection.}{0.5em}{}
+
+\titleformat{\subsubsection}[block]
+  {\normalsize\bfseries\color{igablue}}
+  {\thesubsubsection.}{0.5em}{}
+
+% ── Boîtes d'encadré ──────────────────────────────────────────
+\newmdenv[
+  linecolor=igablue,
+  linewidth=1.5pt,
+  frametitle={\color{igablue}\bfseries Définition},
+  frametitlebackgroundcolor=lightgray,
+  backgroundcolor=lightgray!60,
+  roundcorner=4pt,
+  skipabove=8pt,
+  skipbelow=8pt
+]{defbox}
+
+\newmdenv[
+  linecolor=igaaccent,
+  linewidth=1.5pt,
+  backgroundcolor=igaaccent!8,
+  roundcorner=4pt,
+  skipabove=8pt,
+  skipbelow=8pt
+]{notebox}
+
+% ── Listings (code) ───────────────────────────────────────────
+\lstset{
+  basicstyle=\small\ttfamily,
+  backgroundcolor=\color{lightgray},
+  frame=single,
+  rulecolor=\color{igablue!30},
+  breaklines=true,
+  numbers=left,
+  numberstyle=\tiny\color{codegray},
+  keywordstyle=\color{igablue}\bfseries,
+  commentstyle=\color{igaaccent}\itshape,
+  stringstyle=\color{igalightblue}
+}
+
+% ── Interligne ────────────────────────────────────────────────
+\setstretch{1.3}
+
+\setlength{\parindent}{0.4pt}
+\setlength{\parskip}{4pt}
+
+% ─────────────────────────────────────────────────────────────
+%  DOCUMENT
+% ─────────────────────────────────────────────────────────────
+\begin{document}
+
+% ══════════════════════════════════════════════════════════════
+%  PAGE DE GARDE
+% ══════════════════════════════════════════════════════════════
+\begin{titlepage}
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+
+% Géométrie interne de la page de garde
+\setlength{\topmargin}{-1cm}
+
+\center
+
+\vspace*{1cm}
+
+% ── Logo ──────────────────────────────────────────────────────
+\includegraphics[width=0.28\textwidth]{1.png}\\[0.5cm]
+
+% ── Établissement & filière ───────────────────────────────────
+{\large\bfseries\color{igablue} Institut Supérieur du Génie Appliqué}\\[0.3cm]
+{\large\color{igablue} Projet Tuteuré en DLTI}\\[1.5cm]
+
+% ── Titre encadré ─────────────────────────────────────────────
+\HRule\\[0.5cm]
+{\huge\bfseries\color{igablue}
+  Mise en place d'une application de\\[0.2cm]
+  facturation intelligente assistée par IA (InvoiceAI)
+}\\[0.5cm]
+\HRule\\[1.5cm]
+
+% ── Niveau ────────────────────────────────────────────────────
+{\large\bfseries\color{igablue} 2\textsuperscript{ème} Année — Ingénierie Informatique (DLTI)}\\[3cm]
+
+% ── Auteurs / Encadrants ──────────────────────────────────────
+\begin{minipage}[t]{0.45\textwidth}
+  \raggedright
+  {\large\bfseries\color{igablue} Réalisé par~:}\\[0.4cm]
+  {\normalsize
+    Aya Ahdi\\[0.15cm]
+    Chadi Hamraoui\\[0.15cm]
+    Doha Bouhali
+  }
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.45\textwidth}
+  \raggedleft
+  {\large\bfseries\color{igablue} Encadré par~:}\\[0.4cm]
+  {\normalsize
+    Pr.~ZOUIR Hanane\\[0.15cm]
+    Pr.~RIYAMI Bouchaib
+  }
+\end{minipage}
+
+\vfill
+
+% ── Année universitaire ───────────────────────────────────────
+\HRule\\[0.4cm]
+{\large\color{igablue}\bfseries Année Universitaire 2025 / 2026}\\[0.3cm]
+
+\end{titlepage}
+
+% ══════════════════════════════════════════════════════════════
+%  DÉDICACE
+% ══════════════════════════════════════════════════════════════
+\newpage
+\thispagestyle{empty}
+\section*{Dédicace}
+\addcontentsline{toc}{section}{Dédicace}
+
+\begin{center}
+\textit{\color{igablue}\large« À nos familles, source inépuisable de soutien et d'encouragement. »}
+\end{center}
+
+\vspace{1.5cm}
+Nous dédions ce travail à nos parents, qui n'ont jamais cessé de croire en nous et de nous soutenir tout au long de notre parcours académique. Leur sacrifice, leur amour et leur confiance indéfectible ont été notre moteur dans les moments les plus exigeants de cette formation.
+
+À nos enseignants qui, par leur rigueur et leur bienveillance, ont façonné notre manière de penser et d'aborder les problèmes complexes.
+
+À nos camarades de promotion avec lesquels nous avons partagé bien plus que des cours~: des défis, des fous rires et une ambition commune de réussir.
+
+\vfill
+
+% ══════════════════════════════════════════════════════════════
+%  REMERCIEMENTS
+% ══════════════════════════════════════════════════════════════
+\newpage
+\thispagestyle{empty}
+\section*{Remerciements}
+\addcontentsline{toc}{section}{Remerciements}
+
+Nous tenons à exprimer nos sincères remerciements à toutes les personnes qui ont contribué, de près ou de loin, à la réalisation de ce projet.
+
+Nos premiers remerciements s'adressent à nos encadrants, \textbf{Pr.~ZOUIR Hanane} et \textbf{Pr.~RIYAMI Bouchaib}, pour leur disponibilité, leurs conseils avisés et leur suivi régulier tout au long de ce travail. Leur expertise et leur pédagogie ont été déterminantes dans la conduite de ce projet.
+
+Nous remercions également l'ensemble du corps enseignant de l'\textbf{Institut Supérieur du Génie Appliqué (IGA)} pour la qualité de la formation dispensée et les fondements techniques qui nous ont permis de mener à bien ce projet.
+
+Enfin, nous exprimons notre reconnaissance à toutes les personnes qui ont participé aux tests de l'application et dont les retours nous ont permis d'améliorer la qualité du produit final.
+
+\vfill
+
+% ══════════════════════════════════════════════════════════════
+%  RÉSUMÉ
+% ══════════════════════════════════════════════════════════════
+\newpage
+\thispagestyle{empty}
+\section*{Résumé}
+\addcontentsline{toc}{section}{Résumé}
+
+Ce projet tuteuré, réalisé dans le cadre du cursus de 2\up{ème} année Ingénierie en Informatique à l'IGA, porte sur la conception et le développement d'une plateforme web moderne de gestion et de création de factures assistée par l'Intelligence Artificielle, intitulée \textbf{InvoiceAI}.
+
+Face aux limites des méthodes de facturation traditionnelles~---~caractérisées par des erreurs de saisie manuelle, une absence de suivi des impayés et une lourdeur administrative~---~notre solution propose une plateforme intégrée permettant la génération automatique de factures à partir du langage naturel, le suivi multi-devises (notamment en Dirham Marocain MAD), l'intégration des exigences fiscales marocaines (ICE, TVA à 20\%) et la gestion personnalisée du profil d'entreprise (logo, cachet, signature).
+
+L'architecture repose sur \textbf{React 19} avec \textbf{Vite} et \textbf{Tailwind CSS} pour le frontend, \textbf{Express.js / Node.js} pour le backend REST, et \textbf{MongoDB Atlas} via \textbf{Mongoose} pour la persistance des données. L'authentification sécurisée est déléguée à \textbf{Clerk}. La valeur ajoutée principale réside dans l'intégration du SDK \textbf{Google Gemini AI} qui transforme instantanément des instructions textuelles brutes en factures structurées, calculées et prêtes pour l'export PDF.
+
+\textbf{Mots-clés~:} InvoiceAI, Facturation Intelligente, Google Gemini AI, React, Node.js, Express, MongoDB Atlas, Clerk Auth, ICE, Multi-devises.
+
+\vfill
+\section*{Abstract}
+\addcontentsline{toc}{section}{Abstract}
+
+This end-of-year project, carried out as part of the 2\up{nd} year Computer Engineering program at IGA, focuses on the design and development of an AI-assisted invoicing platform called \textbf{InvoiceAI}.
+
+Addressing the limitations of conventional invoicing methods --- characterized by manual entry errors, lack of real-time unpaid tracking, and administrative inefficiency --- our web solution delivers an integrated platform for automated invoice generation from natural language prompt, multi-currency tracking (specifically in Moroccan Dirhams MAD), Moroccan tax compliance (ICE, 20\% VAT), and customized business profile management (logo, stamp, signature).
+
+The architecture is built on \textbf{React 19} with \textbf{Vite} and \textbf{Tailwind CSS} for the frontend, \textbf{Express.js / Node.js} for the backend REST API, and \textbf{MongoDB Atlas} via \textbf{Mongoose} for data persistence. Secure authentication is handled via \textbf{Clerk}. The core innovation lies in incorporating the \textbf{Google Gemini AI} SDK, which turns raw text instructions into structured, fully calculated invoices ready for PDF export.
+
+\textbf{Keywords:} InvoiceAI, Smart Invoicing, Google Gemini AI, React, Node.js, Express, MongoDB Atlas, Clerk Auth, ICE, Multi-currency.
+
+\vfill
+% ══════════════════════════════════════════════════════════════
+%  TABLES DES MATIÈRES / FIGURES
+% ══════════════════════════════════════════════════════════════
+\renewcommand{\listfigurename}{Liste des figures}
+\renewcommand{\listtablename}{Liste des tableaux}
+\tableofcontents
+\newpage
+\listoffigures
+\addcontentsline{toc}{section}{Liste des figures}
+\newpage
+\listoftables
+\addcontentsline{toc}{section}{Liste des tableaux}
+\newpage
+
+% ── Liste des sigles ──────────────────────────────────────────
+\section*{Liste des sigles et acronymes}
+\addcontentsline{toc}{section}{Liste des sigles et acronymes}
+
+\begin{tabular}{ll}
+\toprule
+\textbf{Sigle} & \textbf{Signification} \\
+\midrule
+API   & Application Programming Interface \\
+BDD   & Base De Données \\
+CORS  & Cross-Origin Resource Sharing \\
+CRUD  & Create, Read, Update, Delete \\
+IA    & Intelligence Artificielle \\
+ICE   & Identifiant Commun de l'Entreprise (Fiscalité Marocaine) \\
+IGA   & Institut Supérieur du Génie Appliqué \\
+JWT   & JSON Web Token \\
+KPI   & Key Performance Indicator \\
+MAD   & Dirham Marocain (Moroccan Dirham) \\
+MERN  & MongoDB, Express, React, Node.js \\
+MVC   & Modèle-Vue-Contrôleur \\
+NLP   & Natural Language Processing (Traitement du Langage Naturel) \\
+ODM   & Object Document Mapper \\
+PDF   & Portable Document Format \\
+REST  & Representational State Transfer \\
+TVA   & Taxe sur la Valeur Ajoutée \\
+UML   & Unified Modeling Language \\
+UI    & User Interface \\
+UX    & User Experience \\
+\bottomrule
+\end{tabular}
+
+\newpage
+\pagenumbering{arabic}
+
+% ══════════════════════════════════════════════════════════════
+%  INTRODUCTION GÉNÉRALE
+% ══════════════════════════════════════════════════════════════
+\section*{Introduction Générale}
+\addcontentsline{toc}{section}{Introduction Générale}
+\markboth{Introduction Générale}{Introduction Générale}
+
+La digitalisation des processus administratifs et comptables constitue aujourd'hui un levier stratégique inestimable pour l'efficacité des petites et moyennes entreprises, des indépendants et des startups. À une époque où la rapidité, l'exactitude des calculs fiscaux et la visibilité financière en temps réel sont primordiales, la gestion manuelle de la facturation sur des tableurs ou des éditeurs de texte traditionnels devient une source récurrente d'erreurs, de retards de paiement et d'inefficacités.
+
+Ce projet de fin d'études s'inscrit dans cette dynamique de modernisation des outils de gestion financière. Il vise à concevoir et développer \textbf{InvoiceAI}, une plateforme web moderne et responsive qui simplifie l'établissement, le suivi et la gestion globale des factures grâce à l'intégration poussée de l'Intelligence Artificielle.
+
+Notre solution se distingue par l'utilisation de modèles de langage de pointe (\textbf{Google Gemini AI}) pour transformer une simple saisie en langage naturel en un document comptable complet, conforme aux exigences réglementaires marocaines (mentions obligatoires, ICE, taux de TVA à 20\%, numérotation automatique \texttt{INV-******-******}), tout en fournissant un tableau de bord analytique dote de KPIs clairs sur la santé financière de l'émetteur.
+
+Ce rapport est structuré en quatre chapitres~:
+
+\begin{enumerate}[leftmargin=2cm]
+  \item \textbf{Chapitre I~: Contexte général du projet}~---~présentation du cahier des charges, de la problématique, de l'étude de l'existant et de l'analyse des besoins.
+  \item \textbf{Chapitre II~: Étude préalable}~---~étude du marché, choix de la méthode managériale Scrum, planning prévisionnel et estimation budgétaire.
+  \item \textbf{Chapitre III~: Modélisation}~---~conception UML (diagrammes de cas d'utilisation, de séquence, de classes), schéma de base de données MongoDB et architecture des documents.
+  \item \textbf{Chapitre IV~: Réalisation}~---~architecture technique fullstack, outils et frameworks, et présentation des interfaces réalisées.
+\end{enumerate}
+
+% ══════════════════════════════════════════════════════════════
+%  CHAPITRE I
+% ══════════════════════════════════════════════════════════════
+\newpage
+\section{Chapitre I : Contexte général du projet}
+
+\subsection*{Introduction}
+\phantomsection
+\addcontentsline{toc}{subsection}{Introduction}
+
+Ce premier chapitre pose les fondations conceptuelles de notre projet. Il s'ouvre sur la présentation du cahier des charges qui encadre notre démarche, puis analyse l'existant à travers l'étude des méthodes traditionnelles de facturation, avant de définir les besoins fonctionnels et non fonctionnels de la plateforme \textbf{InvoiceAI}.
+
+\subsection{Cahier de charge}
+
+\subsubsection{Contexte du projet}
+
+La facturation est une obligation légale et le pilier financier de toute activité commerciale. Cependant, au Maroc comme dans de nombreux pays, de nombreuses TPE et auto-entrepreneurs continuent de créer leurs factures manuellement sous Word ou Excel. Cette pratique entraîne fréquemment des erreurs d'alignement de TVA, des numérotations incohérentes, l'absence de mention légale comme l'ICE (Identifiant Commun de l'Entreprise), et l'incapacité d'analyser le taux de recouvrement des créances.
+
+Notre projet, réalisé dans le cadre du module de projet tuteuré à l'\textbf{IGA (Institut Supérieur du Génie Appliqué)}, répond à ce constat en proposant une solution web fullstack moderne. Cette solution permet aux utilisateurs de créer, modifier, imprimer et suivre leurs factures en ligne, tout en s'appuyant sur l'IA pour générer automatiquement les données à partir de simples descriptions.
+
+La portée du projet englobe la gestion multi-devises (MAD, EUR, USD), la prise en compte du profil de l'entreprise (avec téléversement de logo, cachet et signature encodés), ainsi que l'authentification sécurisée par Clerk.
+
+\subsubsection{Problématique}
+
+La facturation traditionnelle au sein des petites et moyennes structures souffre de plusieurs lacunes majeures~:
+
+\begin{itemize}
+  \item \textbf{Erreurs de saisie et de calcul~:} calculs manuels répétitifs du sous-total, de la TVA (20\%) et du montant TTC, sujets à des fautes de frappe.
+  \item \textbf{Manque de conformité réglementaire~:} oubli fréquent de l'ICE marocain ou non-respect de la numérotation séquentielle standardisée (\texttt{INV-******-******}).
+  \item \textbf{Absence de suivi centralisé des impayés~:} difficulté à visualiser immédiatement l'état financier global (montants payés, en attente ou en retard).
+  \item \textbf{Personnalisation lourde~:} insertion manuelle pénible du logo, du cachet commercial et de la signature sur chaque document.
+  \item \textbf{Absence d'automatisation intelligente~:} l'émetteur doit tout saisir champ par champ, sans possibilité de générer une facture à partir d'un message rapide.
+\end{itemize}
+
+\begin{notebox}
+\textbf{Question centrale~:} Comment concevoir une plateforme web de facturation moderne qui automatise la génération de documents comptables grâce à l'IA (Google Gemini), garantit la conformité légale et offre un suivi financier clair et en temps réel~?
+\end{notebox}
+
+\subsection{Étude de l'existant}
+
+\subsubsection{Présentation des outils de facturation traditionnels}
+
+Pour évaluer le besoin du marché, nous avons étudié le fonctionnement des factures générées sous les outils de bureautique classiques (Excel / Word) ainsi que les logiciels de facturation comptables généralistes non adaptés aux TPE marocaines.
+
+\subsubsection{Description de l'existant}
+
+La majorité des entrepreneurs émettent leurs factures en dupliquant un modèle Excel ou Word existant. Le fichier est ensuite exporté en PDF puis envoyé au client. La gestion des récapitulatifs nécessite la tenue manuelle d'un second tableau de suivi.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{frontend/src/assets/logo.png}
+\caption{Système traditionnel de facturation manuelle vs Application web InvoiceAI}
+\end{figure}
+
+\subsubsection{Critique de l'existant}
+
+L'analyse de la facturation manuelle met en évidence six lacunes fondamentales, résumées dans le tableau ci-dessous~:
+
+\begin{table}[H]
+\centering
+\caption{Analyse critique du système de facturation traditionnel}
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline
+\rowcolor{igablue!15}
+\textbf{Critère} & \textbf{Constat} \\
+\hline
+Saisie des articles & Manuelle et sujette aux erreurs de frappe et de calcul de TVA \\
+\hline
+Prise en charge ICE & Souvent omise ou mal positionnée sur les documents \\
+\hline
+Dashboard & Inexistant — aucun suivi en temps réel du chiffre d'affaires payé/impayé \\
+\hline
+Génération automatique IA & Absente — obligation de remplir chaque champ manuellement \\
+\hline
+Multi-devises (MAD/EUR) & Nécessite des conversions manuelles sans taux standardisé \\
+\hline
+Identité visuelle (Logo/Cachet) & Collage manuel d'images sur Word/Excel souvent déformé \\
+\hline
+\end{tabularx}
+\end{table}
+
+\subsubsection{Solution proposée}
+
+Face à ces lacunes, notre plateforme **InvoiceAI** propose une solution complète qui intègre~:
+
+\begin{itemize}
+  \item Un générateur de factures assisté par l'IA **Google Gemini**, capable de convertir un prompt en langage naturel en facture structurée.
+  \item Un tableau de bord dynamique affichant les KPIs clés en Dirhams Marocains (MAD) : Total des factures, Montant payé, Montant impayé, Taux de recouvrement \%.
+  \item Un module de gestion du **Business Profile** avec téléversement et persistance du logo, du cachet et de la signature.
+  \item La gestion native de l'**ICE** (Identifiant Commun de l'Entreprise) et de la TVA par défaut (20\%).
+  \item L'auto-génération de numéros de facture uniques (\texttt{INV-******-******}).
+  \item L'aperçu d'impression en direct et l'exportation au format PDF conforme.
+  \item L'authentification sécurisée des utilisateurs via **Clerk**.
+\end{itemize}
+
+\subsection{Analyse des besoins}
+
+\subsubsection{Besoins Fonctionnels}
+
+Le système implique deux rôles utilisateurs principaux~: l'\textbf{Utilisateur Émetteur (Client Authentifié)} et l'\textbf{Administrateur Système}.
+
+\vspace{0.5cm}
+\textbf{Utilisateur Émetteur (Client Authentifié)~:}
+\begin{itemize}
+  \item S'authentifier et gérer sa session de manière sécurisée via Clerk (SignIn / SignUp).
+  \item Configurer son profil d'entreprise (\textit{Business Profile}) : nom de l'entreprise, e-mail, adresse, téléphone, ICE, logo, cachet et signature.
+  \item Créer une facture manuellement en saisissant les articles (description, quantité, prix unitaire, devise, TVA).
+  \item Générer une facture via l'assistant IA Google Gemini à partir d'un prompt textuel.
+  \item Consulter la liste des factures avec recherche par numéro/client, filtrage par statut (\textit{Draft}, \textit{Unpaid}, \textit{Paid}, \textit{Overdue}), filtrage par date et tri.
+  \item Consulter l'aperçu dynamique de n'importe quelle facture et l'imprimer/exporter en PDF.
+  \item Modifier le statut d'une facture (ex: passer de \textit{Unpaid} à \textit{Paid}).
+  \item Supprimer une facture obsolète.
+  \item Visualiser les indicateurs financiers globaux sur le Dashboard.
+\end{itemize}
+
+\vspace{0.5cm}
+\textbf{Administrateur Système~:}
+\begin{itemize}
+  \item Superviser la disponibilité globale des services (API backend, base de données MongoDB, API Gemini).
+  \item Administrer les clés d'API et les quotas d'accès aux modèles d'IA.
+\end{itemize}
+
+\subsubsection{Besoins non fonctionnels}
+
+\begin{table}[H]
+\centering
+\caption{Besoins non fonctionnels du système InvoiceAI}
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline
+\rowcolor{igablue!15}
+\textbf{Critère} & \textbf{Description} \\
+\hline
+Performance & Temps de réponse de l'API inférieur à 2 secondes pour la gestion des factures et inférieur à 4 secondes pour la génération par Gemini AI. \\
+\hline
+Ergonomie & Interface moderne (Glassmorphism, Tailwind CSS 4, Google Font Outfit), responsive (Mobile / Tablette / Desktop) avec Sidebar réductible. \\
+\hline
+Sécurité & Authentification gérée par Clerk Express / Clerk React, protection des routes privées, tokens JWT sécurisés, sanitisation des requêtes Mongoose. \\
+\hline
+Disponibilité & Disponibilité 24h/24 de l'API REST backend et tolérance aux pannes avec basculement automatique des modèles Gemini (\texttt{gemini-2.5-flash} $\rightarrow$ \texttt{gemini-2.0-flash} $\rightarrow$ \texttt{gemini-2.0}). \\
+\hline
+Fiabilité & Calculs de totaux et taxes garantis côté backend et frontend, unicité de la numérotation des factures. \\
+\hline
+Maintenabilité & Découpage strict Frontend (React 19 / Vite) / Backend (Express ES Modules), code documenté et validation avec OxLint. \\
+\hline
+\end{tabularx}
+\end{table}
+
+\subsection*{Conclusion}
+\addcontentsline{toc}{subsection}{Conclusion}
+
+Ce premier chapitre a posé les bases conceptuelles d'**InvoiceAI**~: une problématique concrète liée aux limites de la facturation manuelle, et des spécifications fonctionnelles claires. Le chapitre suivant aborde l'étude préalable, la comparaison de marché, la méthode Scrum et l'estimation budgétaire.
+
+% ══════════════════════════════════════════════════════════════
+%  CHAPITRE II
+% ══════════════════════════════════════════════════════════════
+\newpage
+\section{Chapitre II : Étude préalable}
+
+\subsection*{Introduction}
+\phantomsection
+\addcontentsline{toc}{subsection}{Introduction}
+
+Toute démarche d'ingénierie logicielle s'appuie sur une étude préalable approfondie. Ce chapitre présente l'analyse du marché des logiciels de facturation, justifie nos choix technologiques, détaille la méthode managériale Scrum retenue, ainsi que la planification prévisionnelle sur JIRA et l'estimation budgétaire de notre projet.
+
+\subsection{Étude du marché}
+
+\subsubsection{Solutions Existantes}
+
+Le marché de la facturation électronique propose diverses solutions allant des simples outils bureautiques aux suites ERP lourdes~:
+
+\begin{itemize}
+  \item \textbf{Excel / Word} : méthode la plus répandue mais dépourvue de centralisation, de calculs automatisés fiables et de suivi des paiements.
+  \item \textbf{Invoice Ninja} : solution open-source de facturation. Complète mais complexe à configurer et nécessitant un serveur dédié pour l'auto-hébergement.
+  \item \textbf{Zoho Invoice} : application SaaS de facturation. Très efficace mais payante au-delà de petits quotas et sans intégration du cadre fiscal marocain spécifique (ICE).
+  \item \textbf{QuickBooks} : logiciel de comptabilité global très coûteux et lourd pour un indépendant ou une TPE marocaine.
+  \item \textbf{Notre solution InvoiceAI} : plateforme web moderne, sur-mesure, combinant l'IA de Google Gemini pour la génération instantanée, la prise en compte native de l'ICE et des devises (MAD), et un coût nul d'infrastructure de base.
+\end{itemize}
+
+\subsubsection{Analyse comparative}
+
+\begin{table}[H]
+\centering
+\small
+\caption{Comparaison des solutions de facturation}
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{3.2cm}|*{5}{>{\centering\arraybackslash}X|}} 
+\hline
+\rowcolor{igablue!15}
+\textbf{Critère} & \textbf{Excel} & \textbf{Invoice Ninja} & \textbf{Zoho Invoice} & \textbf{Quick\newline Books} & \textbf{Notre\newline solution} \\
+\hline
+Génération par IA & {\color{red!70!black}$\times$} & {\color{red!70!black}$\times$} & {\color{red!70!black}$\times$} & {\color{red!70!black}$\times$} & {\color{green!60!black}\checkmark} \\
+\hline
+Support ICE Maroc & {\color{red!70!black}$\times$} & {\color{red!70!black}$\times$} & {\color{red!70!black}$\times$} & {\color{red!70!black}$\times$} & {\color{green!60!black}\checkmark} \\
+\hline
+Dashboard KPIs & {\color{red!70!black}$\times$} & {\color{green!60!black}\checkmark} & {\color{green!60!black}\checkmark} & {\color{green!60!black}\checkmark} & {\color{green!60!black}\checkmark} \\
+\hline
+Multi-devises (MAD) & {\color{red!70!black}$\times$} & {\color{green!60!black}\checkmark} & {\color{green!60!black}\checkmark} & {\color{green!60!black}\checkmark} & {\color{green!60!black}\checkmark} \\
+\hline
+Export PDF direct & {\color{green!60!black}\checkmark} & {\color{green!60!black}\checkmark} & {\color{green!60!black}\checkmark} & {\color{green!60!black}\checkmark} & {\color{green!60!black}\checkmark} \\
+\hline
+Auth Sécurisée (Clerk) & {\color{red!70!black}$\times$} & {\color{green!60!black}\checkmark} & {\color{green!60!black}\checkmark} & {\color{green!60!black}\checkmark} & {\color{green!60!black}\checkmark} \\
+\hline
+Adapté TPE Maroc & {\color{red!70!black}$\times$} & {\color{red!70!black}$\times$} & {\color{red!70!black}$\times$} & {\color{red!70!black}$\times$} & {\color{green!60!black}\checkmark} \\
+\hline
+\end{tabularx}
+\end{table}
+
+\subsubsection{Solution choisie}
+
+Nous optons pour un **développement sur mesure** basé sur la stack MERN moderne (React 19 / Express 5 / Node.js / MongoDB Atlas) enrichie de l'IA Google Gemini et du service d'authentification Clerk.
+
+\subsubsection{Justification du choix}
+
+Ce choix technique offre quatre avantages majeurs~:
+\begin{enumerate}
+  \item \textbf{Innovation par l'IA~:} possibilité d'invoquer l'API Gemini pour convertir une consigne textuelle en facture structurée.
+  \item \textbf{Conformité fiscale~:} paramétrage natif du champ ICE, du calcul de la TVA à 20\% et de la devise Dirham Marocain (MAD).
+  \item \textbf{Sécurité et modularité~:} délégation de la sécurité des utilisateurs à Clerk et architecture API REST découplée.
+  \item \textbf{Expérience Utilisateur moderne~:} interface réactive construite avec Vite, Tailwind CSS 4 et OxLint.
+\end{enumerate}
+
+\subsection{Méthode managériale}
+
+\subsubsection{Définition de la méthode}
+
+Le projet **InvoiceAI** est mené en suivant le cadre agile **Scrum**, favorisant des itérations courtes (sprints) et une grande réactivité face aux retours des encadrants.
+
+\subsubsection{Pourquoi Scrum~?}
+
+Scrum convient parfaitement à ce projet en raison des facteurs suivants~:
+\begin{itemize}
+  \item \textbf{Flexibilité~:} l'intégration du SDK Gemini AI nécessitait des ajustements sur la gestion des prompts et des fallbacks.
+  \item \textbf{Transparence~:} suivi rigoureux des tâches dans le backlog JIRA et partage régulier de l'avancement.
+  \item \textbf{Incrémentation~:} chaque sprint a permis de valider un module fonctionnel (Auth, Profil, Factures, IA).
+\end{itemize}
+
+\subsubsection{Les acteurs dans l'équipe Scrum}
+
+\begin{table}[H]
+\centering
+\caption{Répartition des rôles Scrum dans notre projet}
+\begin{tabularx}{\textwidth}{|l|p{3.5cm}|>{\raggedright\arraybackslash}X|}
+\hline
+\rowcolor{igablue!15}
+\textbf{Rôle} & \textbf{Personne} & \textbf{Responsabilités} \\
+\hline
+Product Owner & Pr. RIYAMI Bouchaib\newline Pr. ZOUIR Hanane & Spécification des exigences et validation des livrables. \\
+\hline
+Scrum Master & Doha Bouhali & Animation des réunions, suppression des blocages techniques. \\
+\hline
+Équipe de développement & Aya Ahdi\newline Chadi Hamraoui\newline Doha Bouhali & Conception, développement frontend (React), backend (Node/Express), MongoDB et tests. \\
+\hline
+\end{tabularx}
+\end{table}
+
+\subsubsection{Découpage en Sprints}
+
+La réalisation s'est déroulée en 7 phases itératives~:
+
+\begin{itemize}
+  \item \textbf{Sprint 1~:} Analyse et planification (étude de l'existant, cahier des charges, cadrage du besoin).
+  \item \textbf{Sprint 2~:} Modélisation (diagrammes UML, schéma de base de données MongoDB, maquettage UI).
+  \item \textbf{Sprint 3~:} Initialisation de l'environnement (React 19, Vite, Express 5, MongoDB Atlas, Clerk).
+  \item \textbf{Sprint 4~:} Développement Backend API REST (Mongoose, Invoice Model, Business Profile Router, Multer).
+  \item \textbf{Sprint 5~:} Développement Frontend (Sidebar, Dashboard KPIs, Formulaire Invoice, Preview PDF).
+  \item \textbf{Sprint 6~:} Intégration de l'IA (Google GenAI SDK, Prompt engineering, fallback Gemini 2.5/2.0).
+  \item \textbf{Sprint 7~:} Tests, recettes (OxLint, fixes) et préparation du rapport et de la soutenance.
+\end{itemize}
+
+\subsection{Le planning prévisionnel}
+
+La chronologie globale s'est étalée du **26 février au 14 mai 2026**.
+
+\begin{table}[H]
+\centering
+\caption{Planning prévisionnel des Sprints sous JIRA}
+\begin{tabularx}{\textwidth}{|l|c|>{\raggedright\arraybackslash}X|}
+\hline
+\rowcolor{igablue!15}
+\textbf{Phase / Épic} & \textbf{Durée} & \textbf{Objectifs principaux} \\
+\hline
+Analyse et planification & 1 semaine & Rédaction cahier des charges et étude de faisabilité \\
+\hline
+Modélisation et Conception & 2 semaines & Modélisation UML, schéma Mongoose et composants \\
+\hline
+Initialisation Stack & 1 semaine & Config React/Vite, Express 5, Clerk et MongoDB Atlas \\
+\hline
+Développement backend & 3 semaines & API REST `/api/invoice`, `/api/businessProfile`, `/api/ai` \\
+\hline
+Développement frontend & 2 semaines & Dashboard, formulaires, filtres, export PDF \\
+\hline
+Intégration IA & 1 semaine & Connecteur Google Gemini AI et gestion multi-devises \\
+\hline
+Tests \& Recette & 1 semaine & OxLint validation, tests d'intégration, documentation \\
+\hline
+\end{tabularx}
+\end{table}
+
+\subsection{Estimation budgétaire}
+
+\subsubsection{Méthodologie de calcul}
+
+L'estimation financière repose sur la méthode des coûts directs basés sur l'effort de développement. La charge globale de travail pour la réalisation de la plateforme **InvoiceAI** a été évaluée à un total de $260$~heures.
+
+Sur la base d'un rythme de travail standard de $8$~heures par jour, ce volume horaire global équivaut à un nombre total de jours-hommes défini par la relation suivante~:
+$$ \text{Nombre de jours-hommes} = \frac{260\text{ h}}{8\text{ h/jour}} = 32,5\text{ jours-hommes} $$
+
+Le coût financier de chaque phase est déterminé selon la grille tarifaire d'un ingénieur concepteur-développeur junior sur le marché marocain~:
+\begin{itemize}
+    \item \textbf{Le Tarif Journalier Moyen (TJM) :} Fixé entre $300$~MAD (borne basse) et $600$~MAD (borne haute).
+    \item \textbf{Le Taux Horaire Équivalent (TH) :} Oscillant entre $37,5$~MAD/h et $75$~MAD/h.
+\end{itemize}
+
+$$ \text{Coût (Borne Basse)} = \text{Charge (h)} \times 37,5\text{ MAD/h} $$
+$$ \text{Coût (Borne Haute)} = \text{Charge (h)} \times 75\text{ MAD/h} $$
+
+\subsubsection{Répartition précise par phase}
+
+\begin{table}[H]
+\centering
+\caption{Estimation budgétaire et horaire détaillée pour InvoiceAI}
+\small
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}X|c|c|>{\centering\arraybackslash}p{3cm}|}
+\hline
+\rowcolor{igablue!15}
+\textbf{Phase de développement} & \textbf{Charge (h)} & \textbf{Coût horaire (MAD/h)} & \textbf{Coût estimé (MAD)} \\
+\hline
+Spécifications et cahier des charges & 20 h & 37,5 -- 75 & 750 -- 1 500 \\
+\hline
+Modélisation MongoDB et UX/UI & 30 h & 37,5 -- 75 & 1 125 -- 2 250 \\
+\hline
+Architecture \& API Express/Mongoose & 60 h & 37,5 -- 75 & 2 250 -- 4 500 \\
+\hline
+Développement Frontend React/Vite & 60 h & 37,5 -- 75 & 2 250 -- 4 500 \\
+\hline
+Intégration Google Gemini AI \& PDF & 40 h & 37,5 -- 75 & 1 500 -- 3 000 \\
+\hline
+Sécurité Clerk Auth \& Profils Upload & 20 h & 37,5 -- 75 & 750 -- 1 500 \\
+\hline
+Tests, OxLint \& Validation & 20 h & 37,5 -- 75 & 750 -- 1 500 \\
+\hline
+Documentation \& Livrables & 10 h & 37,5 -- 75 & 375 -- 750 \\
+\hline
+\rowcolor{igablue!10}
+\textbf{Total Global} & \textbf{260 h} & \textbf{37,5 -- 75} & \textbf{9 750 -- 19 500} \\
+\hline
+\end{tabularx}
+\end{table}
+
+\subsection*{Conclusion}
+\addcontentsline{toc}{subsection}{Conclusion}
+
+Ce deuxième chapitre a consolidé l'organisation du projet **InvoiceAI**~: pertinence du développement sur mesure, méthodologie Scrum avec JIRA, et maîtrise de l'effort budgétaire. Le chapitre suivant présente la modélisation UML et le schéma de base de données MongoDB.
+
+% ══════════════════════════════════════════════════════════════
+%  CHAPITRE III
+% ══════════════════════════════════════════════════════════════
+\newpage
+\section{Chapitre III : Modélisation}
+
+\subsection*{Introduction}
+\phantomsection
+\addcontentsline{toc}{subsection}{Introduction}
+
+La phase de modélisation traduit les besoins métier en une structure formelle. Ce chapitre présente les diagrammes UML (cas d'utilisation, classes, séquence), le schéma documentaire MongoDB (Mongoose) et la structure des données de l'application **InvoiceAI**.
+
+\subsection{Méthodologie de conception}
+
+\subsubsection{Choix d'UML et du modèle orienté documents}
+
+Nous utilisons le langage **UML** pour modéliser le comportement et les interactions du système, couplé à une modélisation orientée documents NoSQL pour **MongoDB Atlas**.
+
+\subsubsection{Les acteurs du système}
+
+\begin{itemize}
+  \item \textbf{Utilisateur Émetteur (Client Authentifié)} : entrepreneur ou gestionnaire qui gère son profil d'entreprise, ses factures et génère des documents par IA.
+  \item \textbf{Administrateur / Service d'Authentification (Clerk)} : fournisseur d'identité gérant l'authentification et les jetons d'accès.
+  \item \textbf{Service d'IA (Google Gemini API)} : moteur externe sollicité pour transformer le langage naturel en JSON structuré.
+\end{itemize}
+
+\subsection{Les diagrammes de cas d'utilisation}
+
+Le diagramme de cas d'utilisation décrit l'ensemble des interactions offertes par **InvoiceAI**~:
+
+\textbf{Pour l'Utilisateur Émetteur~:}
+\begin{itemize}
+  \item S'authentifier via Clerk (inclut~: vérifier la session).
+  \item Configurer le profil d'entreprise (\textit{Business Profile}) (inclut~: téléverser le logo, le cachet et la signature).
+  \item Saisir une nouvelle facture manuellement (inclut~: calcul des sous-totaux, TVA 20\% et total).
+  \item Générer une facture automatique par IA (inclut~: saisir un prompt textuel, basculement Gemini).
+  \item Consulter la liste des factures (étend~: rechercher par client/numéro, filtrer par statut, trier par date).
+  \item Visualiser l'aperçu d'une facture et l'imprimer/exporter en PDF.
+  \item Modifier ou supprimer une facture existante.
+  \item Consulter le Dashboard et les KPIs financiers (Total, Payé, Impayé).
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \fbox{
+        \begin{minipage}{0.85\textwidth}
+            \centering
+            \includegraphics[width=\linewidth]{frontend/src/assets/logo.png}
+        \end{minipage}
+    }
+    \caption{Diagramme des cas d'utilisation de l'application InvoiceAI}
+\end{figure}
+
+\subsection{Le diagramme de classes}
+
+Le diagramme de classes représente la structure des données Mongoose et les entités principales~:
+
+\begin{itemize}
+  \item \textbf{Invoice} : \texttt{\_id}, \texttt{owner} (Clerk User ID), \texttt{invoiceNumber} (ex: \texttt{INV-849204-102934}), \texttt{issueDate}, \texttt{dueDate}, \texttt{fromBusinessName}, \texttt{fromEmail}, \texttt{fromAddress}, \texttt{fromPhone}, \texttt{fromIce}, \texttt{client} (Object: name, email, address, phone), \texttt{items} (Array of ItemSchema), \texttt{currency} (MAD, EUR, USD), \texttt{status} (\textit{draft}, \textit{unpaid}, \textit{paid}, \textit{overdue}), \texttt{taxPercent} (default: 20), \texttt{subtotal}, \texttt{tax}, \texttt{total}, \texttt{logoDataUrl}, \texttt{stampDataUrl}, \texttt{signatureDataUrl}.
+  \item \textbf{ItemSchema} (Sous-document embarqué) : \texttt{id}, \texttt{description}, \texttt{qty}, \texttt{unitPrice}.
+  \item \textbf{BusinessProfile} : \texttt{\_id}, \texttt{owner} (Clerk User ID), \texttt{businessName}, \texttt{email}, \texttt{address}, \texttt{phone}, \texttt{ice}, \texttt{logoUrl}, \texttt{stampUrl}, \texttt{signatureUrl}, \texttt{signatureName}, \texttt{signatureTitle}.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \fbox{
+        \begin{minipage}{0.85\textwidth}
+            \centering
+            \includegraphics[width=\linewidth]{frontend/src/assets/logo.png}
+        \end{minipage}
+    }
+    \caption{Diagramme de classes et schémas NoSQL d'InvoiceAI}
+\end{figure}
+
+\subsection{Les diagrammes de séquence}
+
+\subsubsection*{Diagramme de séquence~: Génération de facture par IA (Google Gemini)}
+
+Ce diagramme illustre le flux au cœur de la valeur ajoutée d'**InvoiceAI**~: l'utilisateur saisit un prompt (ex: "Facture pour Client XYZ, 2 ordinateurs à 5000 MAD et installation 1500 MAD"), le frontend envoie la requête au backend Express, qui sollicite le SDK `@google/genai` en essayant les modèles `gemini-2.5-flash` puis `gemini-2.0-flash`. Le JSON retourné est validé, les calculs sont ajustés, puis la facture est pré-remplie dans l'interface.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{frontend/src/assets/logo.png}
+\caption{Diagramme de séquence~: Génération de facture via Google Gemini AI}
+\end{figure}
+
+\subsubsection*{Diagramme de séquence~: Création et calcul de facture}
+
+L'utilisateur remplit le formulaire ou valide la facture IA. Le frontend calcule en direct les montants en MAD, puis soumet les données à l'API `/api/invoice`. Le backend génère le numéro unique `INV-******-******`, applique la validation Mongoose et enregistre le document dans MongoDB Atlas.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{frontend/src/assets/logo.png}
+\caption{Diagramme de séquence~: Saisie, calcul et persistance d'une facture}
+\end{figure}
+
+\subsection{Schéma de la base de données MongoDB}
+
+La base NoSQL **InvoiceAI** stockée sur MongoDB Atlas comprend deux collections principales définies par des schémas Mongoose stricts~: `invoices` et `businessprofiles`. Les index sont positionnés sur le champ `owner` (ID Utilisateur Clerk) et `invoiceNumber` pour garantir des recherches ultra-rapides.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{frontend/src/assets/logo.png}
+\caption{Schéma des collections MongoDB de l'application InvoiceAI}
+\label{fig:schema_bdd}
+\end{figure}
+
+\subsection*{Conclusion}
+\addcontentsline{toc}{subsection}{Conclusion}
+
+Ce chapitre de modélisation a formalisé les données et les flux d'**InvoiceAI**. Le chapitre IV présente l'implémentation logicielle et les captures d'écran des interfaces réalisées.
+
+% ══════════════════════════════════════════════════════════════
+%  CHAPITRE IV
+% ══════════════════════════════════════════════════════════════
+\newpage
+\section{Chapitre IV : Réalisation}
+
+\subsection*{Introduction}
+\phantomsection
+\addcontentsline{toc}{subsection}{Introduction}
+
+Ce quatrième et dernier chapitre est consacré à la réalisation technique d'**InvoiceAI**. Il détaille l'architecture logicielle fullstack, la stack technologique, ainsi que les interfaces utilisateur finales de la plateforme.
+
+\subsection{Étude technique du projet}
+
+\subsubsection{Architecture technique}
+
+**InvoiceAI** adopte une **architecture trois tiers** moderne et hautement découplée~:
+
+\begin{itemize}
+  \item \textbf{Tier Présentation (Frontend)}~: application Single Page Application (SPA) construite avec **React 19** et **Vite**, stylisée avec **Tailwind CSS 4**, exécutée sur le port `5173`.
+  \item \textbf{Tier Métier (Backend API REST)}~: serveur **Node.js** avec **Express 5** (ES Modules `"type": "module"`), exécuté sur le port `4000`. Il héberge la logique métier, la gestion des fichiers statiques `/uploads` via **Multer**, le middleware d'authentification **Clerk Express**, et le module **Google GenAI SDK**.
+  \item \textbf{Tier Données (Database)}~: cluster **MongoDB Atlas** hébergeant la base de données `InvoiceAI`, accédé via l'ODM **Mongoose 9**.
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{frontend/src/assets/logo.png}
+\caption{Architecture technique fullstack de la plateforme InvoiceAI}
+\label{fig:architecture_technique}
+\end{figure}
+
+\subsubsection{Outils et frameworks}
+
+\paragraph{Frontend~:}
+\begin{itemize}
+  \item \textbf{React 19.2.8 / React DOM 19.2.8}~: bibliothèque UI moderne pour des composants réactifs.
+  \item \textbf{Vite 8.2.0}~: bundler ultra-rapide avec Hot Module Replacement (HMR).
+  \item \textbf{Tailwind CSS 4.3.3}~: framework CSS de dernière génération via le plugin `@tailwindcss/vite`.
+  \item \textbf{React Router DOM 7.18.2}~: routage côté client avec gestion des vues dynamiques.
+  \item \textbf{@clerk/clerk-react 5.61.9 / @clerk/react 6.12.10}~: authentification utilisateur clé en main.
+  \item \textbf{OxLint 1.75.0}~: linter haute performance basé sur Rust.
+\end{itemize}
+
+\paragraph{Backend~:}
+\begin{itemize}
+  \item \textbf{Express 5.2.1}~: framework web minimaliste pour Node.js.
+  \item \textbf{Mongoose 9.9.1}~: ODM pour la modélisation des objets MongoDB.
+  \item \textbf{@clerk/express 2.1.49}~: validation des sessions et jetons Clerk côté serveur.
+  \item \textbf{@google/genai 2.16.0}~: SDK officiel pour solliciter l'API Google Gemini AI.
+  \item \textbf{Multer 2.2.0}~: gestion des envois de fichiers multipart/form-data (logos, cachets, signatures).
+  \item \textbf{Cors 2.8.6 \& Dotenv 17.4.2}~: gestion du partage de ressources et des variables d'environnement.
+\end{itemize}
+
+\begin{table}[H]
+\centering
+\caption{Tableau récapitulatif de la stack technique InvoiceAI}
+\begin{tabularx}{\textwidth}{|l|*{3}{>{\raggedright\arraybackslash}X|}}
+\hline
+\rowcolor{igablue!15}
+\textbf{Composant} & \textbf{Technologie} & \textbf{Version} & \textbf{Rôle principal} \\
+\hline
+Frontend & React + Vite & 19.2 / 8.2 & Interface utilisateur réactive et responsive \\
+\hline
+Styling & Tailwind CSS & 4.3.3 & Design modern (Glassmorphism, Outfit font) \\
+\hline
+Backend & Express / Node & 5.2.1 & API REST asynchronous ES Modules \\
+\hline
+Base de données & MongoDB Atlas & 9.9 (Mongoose) & Stockage NoSQL cloud document \\
+\hline
+Intelligence Artificielle & Google Gemini SDK & 2.16.0 & Génération de factures via NLP \\
+\hline
+Authentification & Clerk Auth & Express / React & Gestion sécurisée des identités \\
+\hline
+\end{tabularx}
+\end{table}
+
+\subsection{Interfaces de l'application}
+
+Cette section présente les visuels et les scénarios d'utilisation des principales vues de l'application **InvoiceAI**.
+
+\subsubsection*{1. Page d'accueil (Landing Page)}
+
+La page d'accueil d'**InvoiceAI** présente la valeur ajoutée de la solution. Elle comporte une section Hero captivante, la mise en avant des fonctionnalités IA, ainsi qu'une grille tarifaire claire (Plans Starter 0 MAD, Professional 499 MAD, Enterprise 1499 MAD). La barre de navigation supérieure permet d'accéder directement aux boutons de connexion et d'inscription Clerk.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{frontend/src/assets/logo.png}
+\caption{Landing Page de la plateforme InvoiceAI avec présentation des offres}
+\label{fig:landing_page}
+\end{figure}
+
+\subsubsection*{2. Authentification sécurisée par Clerk (SignIn / SignUp Modal)}
+
+L'accès aux fonctionnalités de facturation est protégé par l'authentification **Clerk**. Une modale élégante permet aux utilisateurs de s'inscrire ou de se connecter par e-mail ou via des fournisseurs tiers (Google, etc.). Le jeton de session JWT est transmis automatiquement au backend lors de chaque appel API.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{frontend/src/assets/logo.png}
+\caption{Interface d'authentification sécurisée gérée par Clerk}
+\label{fig:clerk_auth}
+\end{figure}
+
+\subsubsection*{3. Tableau de bord principal (Dashboard avec KPIs financiers)}
+
+Une fois connecté, l'utilisateur accède au Dashboard de bord d'**InvoiceAI**. Cette vue centralise les cartes d'indicateurs financiers exprimés en Dirhams Marocains (MAD) :
+\begin{itemize}
+    \item \textbf{Total Invoices :} nombre global et montant cumulé de factures créées.
+    \item \textbf{Total Paid :} montant total des factures réglées et pourcentage de recouvrement.
+    \item \textbf{Total Unpaid / Overdue :} montant en attente de paiement avec jauge d'alerte.
+    \item \textbf{Average Invoice Value :} valeur moyenne par facture émise.
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{frontend/src/assets/logo.png}
+\caption{Tableau de bord financier et KPIs de suivi des encaissements (MAD)}
+\label{fig:dashboard_kpis}
+\end{figure}
+
+\subsubsection*{4. Assistant de génération de facture par IA (Google Gemini Modal)}
+
+En cliquant sur le bouton **"Générer par IA"**, l'utilisateur ouvre une boîte de dialogue interactive. Il y saisit une consigne textuelle libre (ex: *"Facture pour la société TechCorp, 2 ordinateurs portables à 8000 MAD l'unité et 1 prestation de configuration à 2000 MAD, TVA 20\%"*). L'application sollicite le modèle **Google Gemini** et remplit automatiquement le formulaire avec le client, les articles, les prix et les taxes calculés.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{frontend/src/assets/logo.png}
+\caption{Interface de génération intelligente de facture via Google Gemini AI}
+\label{fig:ai_invoice_modal}
+\end{figure}
+
+\subsubsection*{5. Formulaire de création et d'édition manuelle d'une facture}
+
+Sur la page de création/édition (\texttt{/create-invoice}), l'émetteur dispose d'un formulaire complet pour saisir les informations du client, la date d'émission, l'échéance, la devise (MAD, EUR, USD), et d'ajouter dynamiquement des lignes d'articles (description, quantité, prix unitaire). Les montants HT, la TVA (20\%) et le Total TTC sont recalculés instantanément.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{frontend/src/assets/logo.png}
+\caption{Formulaire de création de facture avec calcul dynamique de la TVA}
+\label{fig:create_invoice}
+\end{figure}
+
+\subsubsection*{6. Liste et gestion des factures (Invoices List)}
+
+La vue \texttt{/invoices} affiche le tableau récapitulatif de toutes les factures enregistrées. Elle offre une barre de recherche rapide par nom de client ou numéro de facture (\texttt{INV-******-******}), un filtre par statut (\textit{Draft}, \textit{Unpaid}, \textit{Paid}, \textit{Overdue}), un filtre par plage de dates, ainsi qu'une pagination. Des boutons d'action rapides permettent de visualiser, modifier, changer le statut ou supprimer un document.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{frontend/src/assets/logo.png}
+\caption{Gestion des factures avec filtres par statut, recherche et tri}
+\label{fig:invoices_list}
+\end{figure}
+
+\subsubsection*{7. Aperçu de la facture (Invoice Preview \& Export PDF)}
+
+L'interface d'aperçu génère le rendu visuel exact du document comptable à imprimer ou à télécharger en PDF. Elle intègre automatiquement les éléments du **Business Profile** : l'en-tête de l'émetteur avec son numéro d'**ICE**, le logo de l'entreprise, le tableau des articles au propre, ainsi que le cachet et la signature officielle bas de page.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{frontend/src/assets/logo.png}
+\caption{Aperçu de facture professionnel avec ICE, Logo, Cachet et Signature}
+\label{fig:invoice_preview}
+\end{figure}
+
+\subsubsection*{8. Gestion du profil d'entreprise (Business Profile)}
+
+Accessible depuis la route \texttt{/business-profile}, cette interface permet à l'entrepreneur de renseigner les informations légales de sa structure (Nom commercial, Adresse, E-mail, Téléphone, numéro d'ICE) et de téléverser les fichiers d'images d'identité visuelle (Logo, Cachet commercial, Signature manuscrite). Ces éléments sont stockés et réinjectés automatiquement sur toutes les nouvelles factures.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{frontend/src/assets/logo.png}
+\caption{Interface du Business Profile et téléversement des visuels d'entreprise}
+\label{fig:business_profile}
+\end{figure}
+
+\subsection*{Conclusion}
+\addcontentsline{toc}{subsection}{Conclusion}
+
+Ce chapitre a illustré l'implémentation concrète de la plateforme **InvoiceAI**~: une architecture MERN robuste et scalable, une intégration réussie de l'IA Google Gemini, et un ensemble d'interfaces ergonomiques répondant aux exigences légales et opérationnelles des entreprises.
+
+% ══════════════════════════════════════════════════════════════
+%  CONCLUSION GÉNÉRALE
+% ══════════════════════════════════════════════════════════════
+\newpage
+\section*{Conclusion Générale}
+\addcontentsline{toc}{section}{Conclusion Générale}
+\markboth{Conclusion Générale}{Conclusion Générale}
+
+\subsection*{Réalisations}
+\addcontentsline{toc}{subsection}{Réalisations}
+
+Ce projet de fin d'études a permis de concevoir et de réaliser avec succès la plateforme web **InvoiceAI**, une application moderne de facturation assistée par l'Intelligence Artificielle.
+
+Les réalisations clés sont~:
+\begin{itemize}
+  \item Un **générateur de factures par IA** basé sur le SDK Google Gemini, capable de traduire du langage naturel en documents comptables JSON valides.
+  \item Un **Tableau de bord financier dynamique** présentant des KPIs en Dirhams Marocains (MAD) pour le suivi des factures payées, impayées et du chiffre d'affaires.
+  \item La gestion conforme des mentions légales et fiscales marocaines (**ICE**, TVA 20\%, numérotation automatique unique \texttt{INV-******-******}).
+  \item Un module de **Business Profile** avec téléversement et persistance du logo, du cachet commercial et de la signature d'entreprise.
+  \item Une authentification utilisateur robuste et sécurisée déléguée à **Clerk**.
+  \item Une architecture MERN moderne (React 19 / Express 5 / Node.js / MongoDB Atlas) validée avec OxLint.
+\end{itemize}
+
+\subsection*{Limites}
+\addcontentsline{toc}{subsection}{Limites}
+
+Malgré les excellents résultats obtenus, la solution présente quelques limites à prendre en considération~:
+
+\begin{itemize}
+  \item La génération IA dépend de la connexion à l'API Google Gemini AI et des quotas d'appels de la clé API.
+  \item Le stockage des fichiers médias (logos, cachets) est effectué en local dans le répertoire `backend/uploads/` et pourrait être migré vers un service d'objet Cloud (ex: AWS S3 ou Cloudinary) pour une scalabilité distribuée.
+\end{itemize}
+
+\subsection*{Perspectives}
+\addcontentsline{toc}{subsection}{Perspectives}
+
+De nombreuses pistes d'amélioration peuvent être envisagées pour l'avenir d'**InvoiceAI**~:
+
+\begin{itemize}
+  \item **Paiement en ligne intégré** : intégrer une passerelle de paiement (Stripe ou CMI Maroc) pour permettre au client final de régler sa facture directement depuis un lien sécurisé.
+  \item **Relances automatiques par e-mail** : système d'envoi d'e-mails de rappel automatisés avant et après l'échéance de la facture.
+  \item **Application Mobile (React Native)** : déclinaison de la plateforme en application mobile iOS et Android.
+  \item **Exportation comptable avancée** : génération de récapitulatifs au format Excel / CSV et compatibilité avec les standards de facturation électronique (Factur-X).
+\end{itemize}
+
+\subsection*{Conclusion}
+\addcontentsline{toc}{subsection}{Conclusion}
+
+Ce projet aura été une expérience hautement enrichissante. Il nous a permis de consolider nos compétences en ingénierie logicielle fullstack (React 19, Express 5, MongoDB Atlas), d'expérimenter l'intégration concrète de l'IA générative dans un outil métier, et d'appliquer la méthode agile Scrum au sein d'une équipe passionnée.
+
+**InvoiceAI** constitue une solution concrète, fonctionnelle et innovante qui répond pleinement aux besoins de modernisation de la gestion financière des entreprises.
+
+% ══════════════════════════════════════════════════════════════
+%  RÉFÉRENCES BIBLIOGRAPHIQUES
+% ══════════════════════════════════════════════════════════════
+\newpage
+\section*{Références bibliographiques}
+\addcontentsline{toc}{section}{Références bibliographiques}
+
+\begin{enumerate}
+  \item React Official Documentation~: \url{https://react.dev/}
+  \item Node.js \& Express Documentation~: \url{https://expressjs.com/}
+  \item MongoDB Atlas \& Mongoose Documentation~: \url{https://mongoosejs.com/}
+  \item Google Gemini AI SDK Documentation~: \url{https://ai.google.dev/docs}
+  \item Clerk Authentication Documentation~: \url{https://clerk.com/docs}
+  \item Tailwind CSS v4 Documentation~: \url{https://tailwindcss.com/docs}
+  \item Vite Build Tool Documentation~: \url{https://vitejs.dev/}
+  \item Code Général des Impôts (CGI Maroc — Dispositions ICE et TVA)~: \url{https://www.tax.gov.ma/}
+  \item Unified Modeling Language (UML) Specification~: \url{https://www.uml.org/}
+  \item Scrum Guide~: \url{https://www.scrumguides.org/}
+\end{enumerate}
+
+\end{document}
