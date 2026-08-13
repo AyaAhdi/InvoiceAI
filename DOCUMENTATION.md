@@ -24,7 +24,7 @@ graph TD
 - **Backend** : Express/Node.js sur le port `4000`.
 - **Base de données** : MongoDB Atlas (nom de la base : `InvoiceAI`), connexion configurée dans `config/db.js`.
 - **Authentification** : Gestion par Clerk (middleware global sur le backend, fournisseurs et composants UI sur le frontend).
-- **Intelligence Artificielle** : API Google Gemini (modèles de fallback : `gemini-2.5-flash` -> `gemini-2.0-flash` -> `gemini-2.0`).
+- **Intelligence Artificielle** : API Google Gemini (modèles de fallback : `gemini-1.5-flash` -> `gemini-1.5-pro` -> `gemini-2.0-flash-exp`).
 - **Fichiers Statiques** : Gérés par Multer dans `backend/uploads/` et servis via la route `/uploads`.
 
 ---
@@ -151,10 +151,7 @@ L'intégration de Gemini permet de générer des factures à partir de descripti
 
 1. L'utilisateur ouvre le composant `AiInvoiceModal` et saisit un prompt naturel (ex: *"Facture pour la création d'un site web client Acme Corp 5000 MAD"*).
 2. Le frontend effectue un `POST` vers `/api/ai/generate` contenant le payload `{ prompt }`.
-3. Le backend tente d'appeler les modèles Gemini dans l'ordre suivant :
-   - `gemini-2.5-flash`
-   - `gemini-2.0-flash`
-   - `gemini-2.0`
+3. Le backend tente d'appeler les modèles : `POST /api/ai/generate` : AI invoice generation (essaie d'abord `gemini-1.5-flash`, puis `gemini-1.5-pro`, puis `gemini-2.0-flash-exp`)
 4. Le *System Prompt* ordonne à Gemini de renvoyer un JSON structuré comprenant le client, les items, les dates et les montants.
 5. La réponse JSON est parsée par le backend, renvoyée au frontend, et auto-remplit le formulaire de création de facture.
 

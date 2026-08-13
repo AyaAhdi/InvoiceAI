@@ -13,9 +13,10 @@ if (!API_KEY) {
 const ai = new GoogleGenAI({ apiKey: API_KEY });
 // models to try
 const MODEL_CANDIDATES = [
-  "gemini-2.5-flash",
-  "gemini-2.0-flash",
-  "gemini-2.0",
+  "gemini-1.5-flash",
+  "gemini-1.5-pro",
+  "gemini-2.0-flash-exp",
+  "gemini-1.5-flash-latest",
 ];
 
 // in the prompt you can provide these details and it will fill those automatically.
