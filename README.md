@@ -7,7 +7,7 @@
 ![TailwindCSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white)
 ![Vite](https://img.shields.io/badge/vite-%23646CFF.svg?style=for-the-badge&logo=vite&logoColor=white)
 
-Bienvenue sur la documentation du projet **InvoiceAI**, une application moderne de gestion et de création de factures assistée par l'Intelligence Artificielle. Créé par **Ahdi Abdelhaq**.
+Bienvenue sur la documentation du projet **InvoiceAI**, une application moderne de gestion et de création de factures assistée par l'Intelligence Artificielle. Créé par **Ahdi Aya**.
 
 ---
 
@@ -190,4 +190,7 @@ Facture/
 │           └── Notfound.jsx
 ```
 
-*Author: Ahdi Aya*
+## 👤 Auteur
+
+**Aya Ahdi**  
+* GitHub : [@Aya-Ahdi](https://github.com/Aya-Ahdi)
