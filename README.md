@@ -11,6 +11,24 @@ Bienvenue sur la documentation du projet **InvoiceAI**, une application moderne 
 
 ---
 
+## 📸 Aperçu des Interfaces 
+
+> *Voici un aperçu des principales fonctionnalités de la plateforme telles que présentées dans le rapport de projet.*
+
+| Landing Page | Tableau de Bord & KPIs |
+| :---: | :---: |
+| ![Landing Page](docs/images/landing-page.png) | ![Dashboard](docs/images/dashboard.png) |
+
+| Génération de Facture par IA (Gemini) | Formulaire de Création / TVA (20%) |
+| :---: | :---: |
+| ![AI Modal](docs/images/ai-modal.png) | ![Create Invoice](docs/images/create-invoice.png) |
+
+| Aperçu Professionnel (PDF, ICE, Cachet) | Gestion du Profil d'Entreprise |
+| :---: | :---: |
+| ![Invoice Preview](docs/images/preview.png) | ![Business Profile](docs/images/business-profile.png) |
+
+---
+
 ## 🌟 Fonctionnalités Principales
 
 1. **Dashboard avec KPIs** : Total Invoices, Total Paid (MAD), Total Unpaid (MAD), Collection Efficiency %, Average Invoice Value.
@@ -56,7 +74,7 @@ VITE_CLERK_PUBLISHABLE_KEY=pk_test_...
 
 ---
 
-## 📦 Dépendances (Dependencies)
+## 📦 Dépendances
 
 ### ⚙️ Backend
 | Package | Version | Package | Version |
@@ -98,7 +116,7 @@ VITE_CLERK_PUBLISHABLE_KEY=pk_test_...
 
 ---
 
-## 🗄️ Modèles de Base de Données (Database Models)
+## 🗄️ Modèles de Base de Données 
 
 ### Invoice (`invoiceModel.js`)
 *   **owner** : Clerk User ID (indexé, requis).
@@ -137,7 +155,7 @@ VITE_CLERK_PUBLISHABLE_KEY=pk_test_...
 
 ---
 
-## 📁 Structure du Projet (Project Structure)
+## 📁 Structure du Projet 
 
 ```text
 Facture/
