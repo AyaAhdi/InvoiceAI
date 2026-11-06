@@ -11,21 +11,27 @@ Bienvenue sur la documentation du projet **InvoiceAI**, une application moderne 
 
 ---
 
-## 📸 Aperçu des Interfaces 
+## 📸 Aperçu des Interfaces
 
-> *Voici un aperçu des principales fonctionnalités de la plateforme telles que présentées dans le rapport de projet.*
-
-| Landing Page | Tableau de Bord & KPIs |
+| Landing Page | Connexion (Clerk Auth) |
 | :---: | :---: |
-| ![Landing Page](docs/images/landing-page.png) | ![Dashboard](docs/images/dashboard.png) |
+| ![Landing Page](docs/images/LandingPage.png) | ![Connexion](docs/images/InterfaceConnexion.png) |
 
-| Génération de Facture par IA (Gemini) | Formulaire de Création / TVA (20%) |
+| Inscription (Clerk Auth) | Tableau de Bord (KPIs MAD) |
 | :---: | :---: |
-| ![AI Modal](docs/images/ai-modal.png) | ![Create Invoice](docs/images/create-invoice.png) |
+| ![Inscription](docs/images/InterfaceInscription.png) | ![Dashboard](docs/images/TableauDeBord.png) |
 
-| Aperçu Professionnel (PDF, ICE, Cachet) | Gestion du Profil d'Entreprise |
+| Génération par IA (Google Gemini) | Formulaire de Création & Calcul TVA |
 | :---: | :---: |
-| ![Invoice Preview](docs/images/preview.png) | ![Business Profile](docs/images/business-profile.png) |
+| ![Génération IA](docs/images/InterfaceGénération.png) | ![Formulaire Création](docs/images/FormulaireCréation.png) |
+
+| Gestion & Liste des Factures | Aperçu Professionnel (PDF, ICE, Cachet) |
+| :---: | :---: |
+| ![Gestion Factures](docs/images/GestionFactures.png) | ![Aperçu Facture](docs/images/Facture.png) |
+
+| Profil d'Entreprise (Business Profile) |
+| :---: |
+| ![Business Profile](docs/images/BusinessProfile.png) |
 
 ---
 
@@ -49,17 +55,18 @@ Bienvenue sur la documentation du projet **InvoiceAI**, une application moderne 
 
 ### 🔧 Informations Critiques
 
-*   **Backend port** : `4000`
-*   **Frontend port** : `5173`
-*   **Backend start script** : `nodemon server.js`
-*   **Backend package type** : ES modules (`"type": "module"`)
-*   **Database connection** : Localisée dans `config/db.js`
-*   **Database name** : `InvoiceAI` sur MongoDB Atlas
-*   **CORS origin** (dans `server.js`) : `http://localhost:5173`
+* **Backend port** : `4000`
+* **Frontend port** : `5173`
+* **Backend start script** : `nodemon server.js`
+* **Backend package type** : ES modules (`"type": "module"`)
+* **Database connection** : Localisée dans `config/db.js`
+* **Database name** : `InvoiceAI` sur MongoDB Atlas
+* **CORS origin** (dans `server.js`) : `http://localhost:5173`
 
 ### 🔑 Variables d'Environnement (.env)
 
 **Backend** (`backend/.env`) :
+
 ```env
 CLERK_PUBLISHABLE_KEY=pk_test_...
 CLERK_SECRET_KEY=sk_test_...
@@ -67,9 +74,11 @@ GEMINI_API_KEY=...
 ```
 
 **Frontend** (`frontend/.env`) :
+
 ```env
 VITE_CLERK_PUBLISHABLE_KEY=pk_test_...
 ```
+
 *(Aucun `VITE_API_URL` n'est requis).*
 
 ---
@@ -77,6 +86,7 @@ VITE_CLERK_PUBLISHABLE_KEY=pk_test_...
 ## 📦 Dépendances
 
 ### ⚙️ Backend
+
 | Package | Version | Package | Version |
 | :--- | :--- | :--- | :--- |
 | `@clerk/express` | `^2.1.49` | `cors` | `^2.8.6` |
@@ -87,75 +97,81 @@ VITE_CLERK_PUBLISHABLE_KEY=pk_test_...
 | `dotenv` | `^17.4.2` | `nodemon` | `^3.1.14` |
 
 ### 🎨 Frontend
+
 | Package | Version | Package | Version |
 | :--- | :--- | :--- | :--- |
 | `react` | `^19.2.8` | `tailwindcss` | `^4.3.3` |
 | `react-dom` | `^19.2.8` | `@tailwindcss/vite` | `^4.3.3` |
-| `react-router-dom`| `^7.18.2` | `@vitejs/plugin-react`| `^6.0.4` |
-| `@clerk/clerk-react`| `^5.61.9` | `vite` | `^8.2.0` |
-| `@clerk/react` | `^6.12.10`| `oxlint` | `^1.75.0` |
+| `react-router-dom` | `^7.18.2` | `@vitejs/plugin-react` | `^6.0.4` |
+| `@clerk/clerk-react` | `^5.61.9` | `vite` | `^8.2.0` |
+| `@clerk/react` | `^6.12.10` | `oxlint` | `^1.75.0` |
 
 ---
 
 ## 🛣️ API Routes
 
 ### Invoices (`/api/invoice`)
-*   `GET /api/invoice` : List invoices (accepte les query params `?status=&search=`)
-*   `GET /api/invoice/:id` : Get invoice by ObjectId ou invoiceNumber
-*   `POST /api/invoice` : Create invoice (auto-génère l'invoiceNumber `INV-******-******`)
-*   `PUT /api/invoice/:id` : Update invoice
-*   `DELETE /api/invoice/:id` : Delete invoice
+
+* `GET /api/invoice` : List invoices (accepte les query params `?status=&search=`)
+* `GET /api/invoice/:id` : Get invoice by ObjectId ou invoiceNumber
+* `POST /api/invoice` : Create invoice (auto-génère l'invoiceNumber `INV-******-******`)
+* `PUT /api/invoice/:id` : Update invoice
+* `DELETE /api/invoice/:id` : Delete invoice
 
 ### Business Profile (`/api/businessProfile`)
-*   `GET /api/businessProfile/me` : Get authenticated user's business profile
-*   `POST /api/businessProfile` : Create business profile (requête multipart avec `logoName`, `stampName`, `signatureNameMeta`)
-*   `PUT /api/businessProfile/:id` : Update business profile
+
+* `GET /api/businessProfile/me` : Get authenticated user's business profile
+* `POST /api/businessProfile` : Create business profile (requête multipart avec `logoName`, `stampName`, `signatureNameMeta`)
+* `PUT /api/businessProfile/:id` : Update business profile
 
 ### AI Invoice (`/api/ai`)
-*   `POST /api/ai/generate` : AI invoice generation (essaie d'abord `gemini-2.5-flash`, puis `gemini-2.0-flash`, puis `gemini-2.0`)
+
+* `POST /api/ai/generate` : AI invoice generation (essaie d'abord `gemini-2.5-flash`, puis `gemini-2.0-flash`, puis `gemini-2.0`)
 
 ---
 
-## 🗄️ Modèles de Base de Données 
+## 🗄️ Modèles de Base de Données
 
 ### Invoice (`invoiceModel.js`)
-*   **owner** : Clerk User ID (indexé, requis).
-*   **invoiceNumber** : indexé, requis, auto-generated (`INV-******-******`).
-*   **issueDate**, **dueDate**.
-*   **fromBusinessName**, **fromEmail**, **fromAddress**, **fromPhone**, **fromIce**.
-*   **client** : `{ name, email, address, phone }`.
-*   **items** : `[{ id, description, qty (default:1), unitPrice (default:0) }]`.
-*   **currency** (default: `'MAD'`), **status** (enum: `draft`/`unpaid`/`paid`/`overdue`, default: `'draft'`).
-*   **logoDataUrl**, **stampDataUrl**, **signatureDataUrl**, **signatureName**, **signatureTitle**.
-*   **taxPercent** (default: `20`), **subtotal**, **tax**, **total**.
-*   *timestamps*.
+
+* **owner** : Clerk User ID (indexé, requis).
+* **invoiceNumber** : indexé, requis, auto-generated (`INV-******-******`).
+* **issueDate**, **dueDate**.
+* **fromBusinessName**, **fromEmail**, **fromAddress**, **fromPhone**, **fromIce**.
+* **client** : `{ name, email, address, phone }`.
+* **items** : `[{ id, description, qty (default:1), unitPrice (default:0) }]`.
+* **currency** (default: `'MAD'`), **status** (enum: `draft`/`unpaid`/`paid`/`overdue`, default: `'draft'`).
+* **logoDataUrl**, **stampDataUrl**, **signatureDataUrl**, **signatureName**, **signatureTitle**.
+* **taxPercent** (default: `20`), **subtotal**, **tax**, **total**.
+* *timestamps*.
 
 ### BusinessProfile (`businessProfileModel.js`)
-*   **owner** : Clerk User ID (indexé, requis).
-*   **businessName** (requis), **email**, **address**, **phone**.
-*   **ice** (Moroccan Tax Identification / ICE).
-*   **logoUrl**, **stampUrl**, **signatureUrl**.
-*   **signatureOwnerName**, **signatureOwnerTitle**.
-*   **defaultTaxPercent** (default: `20`).
-*   *timestamps*.
+
+* **owner** : Clerk User ID (indexé, requis).
+* **businessName** (requis), **email**, **address**, **phone**.
+* **ice** (Moroccan Tax Identification / ICE).
+* **logoUrl**, **stampUrl**, **signatureUrl**.
+* **signatureOwnerName**, **signatureOwnerTitle**.
+* **defaultTaxPercent** (default: `20`).
+* *timestamps*.
 
 ---
 
 ## 🗺️ Frontend Routes
 
-*   `/` : Landing page (Home: Navbar + Hero + Features + Pricing + Footer)
-*   **Protected Routes** (`/app` - via Clerk SignedIn/SignedOut/RedirectToSignIn) :
-    *   `/app` ou `/app/dashboard` : Dashboard
-    *   `/app/invoices` : Invoices list
-    *   `/app/invoices/new` ou `/app/create-invoice` : CreateInvoice
-    *   `/app/invoices/:id` ou `/app/invoices/:id/preview` : InvoicePreview
-    *   `/app/invoices/:id/edit` : CreateInvoice (edit mode)
-    *   `/app/business` : BusinessProfile
-*   `*` : 404 (Notfound)
+* `/` : Landing page (Home: Navbar + Hero + Features + Pricing + Footer)
+* **Protected Routes** (`/app` - via Clerk SignedIn/SignedOut/RedirectToSignIn) :
+  * `/app` ou `/app/dashboard` : Dashboard
+  * `/app/invoices` : Invoices list
+  * `/app/invoices/new` ou `/app/create-invoice` : CreateInvoice
+  * `/app/invoices/:id` ou `/app/invoices/:id/preview` : InvoicePreview
+  * `/app/invoices/:id/edit` : CreateInvoice (edit mode)
+  * `/app/business` : BusinessProfile
+* `*` : 404 (Notfound)
 
 ---
 
-## 📁 Structure du Projet 
+## 📁 Structure du Projet
 
 ```text
 Facture/
@@ -211,4 +227,5 @@ Facture/
 ## 👤 Auteur
 
 **Aya Ahdi**  
+
 * GitHub : [@Aya-Ahdi](https://github.com/Aya-Ahdi)
