@@ -223,9 +223,3 @@ Facture/
 │           ├── BusinessProfile.jsx
 │           └── Notfound.jsx
 ```
-
-## 👤 Auteur
-
-**Aya Ahdi**  
-
-* GitHub : [@Aya-Ahdi](https://github.com/Aya-Ahdi)
